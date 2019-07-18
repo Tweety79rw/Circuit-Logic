@@ -13,10 +13,12 @@ class Adder8Bit {
       this.internal.push(new Signal());
       this.leds.push(new Led(i * 25 + x, y + 25, 20, this.internal[i]));
     }
+    this.xors = [];
     for(let i = 7; i >= 0; i--) {
-
+      let bIn = new Signal();
+      this.xors[i] = new XorGate([bInputs[i],this.subLed.signal], [bIn]);
       let bitCarry = new Signal();
-      this.adderBits.push(new AdderBit([aInputs[i], bInputs[i], carry], [this.internal[i], bitCarry]));
+      this.adderBits.push(new AdderBit([aInputs[i], bIn, carry], [this.internal[i], bitCarry]));
       carry = bitCarry;
 
     }
@@ -26,6 +28,9 @@ class Adder8Bit {
     this.subLed.clicked();
   }
   update() {
+    for(let ors of this.xors) {
+      ors.update();
+    }
     for(let a of this.adderBits) {
       a.update();
     }
@@ -37,6 +42,10 @@ class Adder8Bit {
   }
   render() {
     if(this.x && this.y) {
+      push();
+      stroke(255);
+      strokeWeight(1);
+      noFill();
       text('Subtract', this.x + 20, this.y);
       text('Enable', this.x + 20, this.y + 60);
       text('Adder', this.x + 150, this.y);
@@ -45,6 +54,7 @@ class Adder8Bit {
       for(let l of this.leds) {
         l.render();
       }
+      pop();
     }
   }
 }

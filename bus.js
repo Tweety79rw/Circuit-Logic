@@ -24,10 +24,15 @@ class Bus {
   }
   render() {
     if(this.x && this.y) {
+      push();
+      stroke(255);
+      strokeWeight(1);
+      noFill();
       text('Bus', this.x + 150, this.y);
       for(let l of this.leds) {
         l.render();
       }
+      pop();
     }
   }
 }

@@ -43,6 +43,7 @@ class Register {
   render() {
     if(this.x && this.y) {
       push()
+      stroke(255);
       strokeWeight(1);
       noFill();
       this.loadLed.render();

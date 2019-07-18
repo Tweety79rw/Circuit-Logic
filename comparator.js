@@ -5,10 +5,10 @@ class Comparator {
     this.output = output;
   }
   update() {
-    if(this.positive > this.negative) {
-      this.output(true);
+    if(this.positive.state > this.negative.state) {
+      this.output.state = true;
     } else {
-      this.output(false);
+      this.output.state = false;
     }
   }
 }
