@@ -1,7 +1,7 @@
 class DFlipFlop extends CircuitLogic {
-  constructor(inputs, outputs) {
+  constructor(inputs, outputs, reset) {
     super(inputs, [new Signal(false)]);
-    this.dLatch = new DLatch([this.inputs[0], this.outputs[0]],outputs);
+    this.dLatch = new DLatch([this.inputs[0], this.outputs[0]],outputs, reset);
     this.risingEdge = false;
   }
   update() {

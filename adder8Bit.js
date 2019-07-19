@@ -1,17 +1,16 @@
-class Adder8Bit {
+class Adder8Bit extends Module {
   constructor(aInputs, bInputs, carry, enable, outputs, x, y) {
-    this.x = x;
-    this.y = y;
+    super(x, y, 'Adder');
     this.adderBits = [];
     this.outputs = outputs;
     this.internal = [];
     this.enabled = enable[0];
-    this.subLed = new Led(x, y, 20, carry);
-    this.enabledLed = new Led(x, y + 50, 20, enable[0]);
+    this.subLed = new Led(x, y, 20, carry, 'Subtract', RIGHT);
+    this.enabledLed = new Led(x, y + 70, 20, enable[0], 'Enable', RIGHT);
     this.leds = [];
     for(let i = 0; i < 8; i++) {
       this.internal.push(new Signal());
-      this.leds.push(new Led(i * 25 + x, y + 25, 20, this.internal[i]));
+      this.leds.push(new Led(i * 25 + x, y + 25, 20, this.internal[i], (Math.pow(2,(7 - i))).toString(), BOTTOM));
     }
     this.xors = [];
     for(let i = 7; i >= 0; i--) {
@@ -42,13 +41,8 @@ class Adder8Bit {
   }
   render() {
     if(this.x && this.y) {
+      super.render();
       push();
-      stroke(255);
-      strokeWeight(1);
-      noFill();
-      text('Subtract', this.x + 20, this.y);
-      text('Enable', this.x + 20, this.y + 60);
-      text('Adder', this.x + 150, this.y);
       this.subLed.render();
       this.enabledLed.render();
       for(let l of this.leds) {

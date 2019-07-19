@@ -1,5 +1,5 @@
 class RegisterBit {
-  constructor(inputs, outputs) {
+  constructor(inputs, outputs, reset) {
     let and1Out = [new Signal(false)];
     let and2Out = [new Signal(false)];
     let orOut = [new Signal(false)];
@@ -8,7 +8,7 @@ class RegisterBit {
     this.and1 = new AndGate([inputs[0], inputs[1]], and1Out);
     this.and2 = new AndGate([outputs[0], inverterOut[0]], and2Out);
     this.or = new OrGate([and1Out[0], and2Out[0]], orOut);
-    this.dFlipFlop = new DFlipFlop([orOut[0], inputs[2]], outputs);
+    this.dFlipFlop = new DFlipFlop([orOut[0], inputs[2]], outputs, reset);
   }
   update() {
     this.inverter.update();

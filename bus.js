@@ -1,10 +1,9 @@
-class Bus {
+class Bus extends Module {
   constructor(bus, x, y) {
-    this.x = x;
-    this.y = y;
+    super(x, y, 'Bus');
     this.leds = [];
     for(let i = 0; i < bus.length; i++) {
-      this.leds.push(new Led(i * 25 + x, y + 25, 20, bus[i]));
+      this.leds.push(new Led(i * 25 + x, y + 25, 20, bus[i], (Math.pow(2,(bus.length - i - 1))).toString(), BOTTOM));
     }
   }
   clicked() {
@@ -25,10 +24,7 @@ class Bus {
   render() {
     if(this.x && this.y) {
       push();
-      stroke(255);
-      strokeWeight(1);
-      noFill();
-      text('Bus', this.x + 150, this.y);
+      super.render();
       for(let l of this.leds) {
         l.render();
       }

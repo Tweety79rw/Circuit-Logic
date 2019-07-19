@@ -5,11 +5,19 @@ class Clock {
     this.voltage = new Signal(0);
     this.runSignal = new Signal();
     this.stepSignal = new Signal();
-    this.led = new Led(this.x + 5, this.y + 10, 20, out[0]);
-    this.run = new Led(this.x + 5, this.y + 35, 20, this.runSignal);
-    this.step = new Led(this.x + 5, this.y + 60, 20, this.stepSignal);
+    let fiverOut = new Signal();
+    let astableOut = new Signal();
+    let monoStableOut = new Signal();
+    let monoStableInverterOut = new Signal();
+    this.led = new Led(this.x + 120, this.y + 10, 20, out[0], 'Clock', BOTTOM);
+    this.run = new Led(this.x + 60, this.y + 10, 20, this.runSignal, 'Run', BOTTOM);
+    this.step = new Led(this.x + 5, this.y + 10, 20, this.stepSignal, 'Step', BOTTOM);
+    this.or = new OrGate([monoStableOut, astableOut],[out[0]]);
+    this.addAstable = new AndGate([fiverOut, this.runSignal], [astableOut]);
+    this.monoStableInvert = new Inverter([this.runSignal], [monoStableInverterOut]);
+    this.monoStable = new AndGate([this.stepSignal, monoStableInverterOut], [monoStableOut]);
     this.pins = [
-      new Signal(0), this.voltage, out[0], out[1],
+      new Signal(0), this.voltage, fiverOut, out[1],
       new Signal(0), this.voltage, new Signal(0), new Signal(5)
     ];
     this.fiver = new FiveCubedTimer(this.pins);
@@ -31,28 +39,22 @@ class Clock {
     this.step.mouseReleased();
   }
   update() {
-    if(this.runSignal.state) {
-      if(!this.pins[3].state) {
-        this.voltage.state += this.adder;
-      } else {
-        this.voltage.state -= this.adder;
-      }
-      this.fiver.update();
+    if(!this.pins[3].state) {
+      this.voltage.state += this.adder;
     } else {
-      this.pins[2].state = this.stepSignal.state;
+      this.voltage.state -= this.adder;
     }
+    this.fiver.update();
+    this.monoStableInvert.update();
+    this.addAstable.update();
+    this.monoStable.update();
+    this.or.update();
   }
   render() {
     push();
     this.led.render();
     this.run.render();
     this.step.render();
-    stroke(255);
-    strokeWeight(1);
-    noFill();
-    text('Clock', this.x + 20, this.y + 15);
-    text('Run', this.x + 20, this.y + 40);
-    text('Step', this.x + 20, this.y + 65);
     pop();
   }
 }

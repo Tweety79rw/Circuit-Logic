@@ -28,6 +28,7 @@ class Computer {
     this.bus = createArrayOfSignals(bits);
     this.clockSignals = createArrayOfSignals(2);
     this.controlSignals = createArrayOfSignals(6);
+    this.reset = new Signal();
     this.clock = new Clock(this.clockSignals,
       this.x + this.locations.clock.x,
       this.y + this.locations.clock.x
@@ -37,13 +38,13 @@ class Computer {
       this.y + this.locations.bus.y
     );
     this.registerA = new Register(this.bus,
-      [this.controlSignals[0], this.controlSignals[1]],
+      [this.controlSignals[0], this.controlSignals[1], this.reset],
       this.clockSignals[0],
       this.x + this.locations.registerA.x,
       this.y + this.locations.registerA.y
     );
     this.registerB = new Register(this.bus,
-      [this.controlSignals[2], this.controlSignals[3]],
+      [this.controlSignals[2], this.controlSignals[3], this.reset],
       this.clockSignals[0],
       this.x + this.locations.registerB.x,
       this.y + this.locations.registerB.y
@@ -67,9 +68,13 @@ class Computer {
   }
   mousePressed() {
     this.clock.mousePressed();
+    this.registerA.mousePressed();
+    this.registerB.mousePressed();
   }
   mouseReleased() {
     this.clock.mouseReleased();
+    this.registerA.mouseReleased();
+    this.registerB.mouseReleased();
   }
   update() {
     this.clock.update();
