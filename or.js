@@ -3,7 +3,11 @@ class OrGate extends CircuitLogic {
     super(inputs, outputs);
   }
   update() {
-    if(this.inputs[0].state || this.inputs[1].state) {
+    let state = false;
+    for(let input of this.inputs) {
+      state |= input.state;
+    }
+    if(state) {
       this.outputs[0].state = true;
     } else {
       this.outputs[0].state = false;

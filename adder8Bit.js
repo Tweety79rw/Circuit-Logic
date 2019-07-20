@@ -17,7 +17,7 @@ class Adder8Bit extends Module {
       let bIn = new Signal();
       this.xors[i] = new XorGate([bInputs[i],this.subLed.signal], [bIn]);
       let bitCarry = new Signal();
-      this.adderBits.push(new AdderBit([aInputs[i], bIn, carry], [this.internal[i], bitCarry]));
+      this.adderBits.push(new AdderBit([aInputs[i], bIn], carry, [this.internal[i], bitCarry]));
       carry = bitCarry;
 
     }
