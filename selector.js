@@ -1,16 +1,10 @@
-class Selector {
+class Selector extends CircuitLogic {
   constructor(aInputs, bInputs, select, outputs) {
-    this.selectorBits = [];
+    super();
     let selectOut = new Signal();
-    this.inverter = new Inverter([select], [selectOut]);
+    super.addGate(new Inverter([select], [selectOut]));
     for(let i = 0; i < aInputs.length; i++) {
-      this.selectorBits.push(new SelectorBit(aInputs[i], bInputs[i], select, selectOut, outputs[i]));
-    }
-  }
-  update() {
-    this.inverter.update();
-    for(let selectorBit of this.selectorBits) {
-      selectorBit.update();
+      super.addGate(new SelectorBit(aInputs[i], bInputs[i], select, selectOut, outputs[i]));
     }
   }
 }

@@ -1,16 +1,13 @@
-class OrGate extends CircuitLogic {
+class OrGate {
   constructor(inputs, outputs) {
-    super(inputs, outputs);
+    this.inputs = inputs;
+    this.outputs = outputs;
   }
   update() {
     let state = false;
     for(let input of this.inputs) {
-      state |= input.state;
+      state = state || input.state;
     }
-    if(state) {
-      this.outputs[0].state = true;
-    } else {
-      this.outputs[0].state = false;
-    }
+    this.outputs[0].state = state;
   }
 }

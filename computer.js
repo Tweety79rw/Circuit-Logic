@@ -10,17 +10,21 @@ class Computer {
         x: 550,
         y: 30
       },
+      programCounter: {
+        x: 850,
+        y: 30
+      },
       registerA:{
         x: 850,
-        y: 60
+        y: 130
       },
       registerB:{
         x: 850,
-        y: 350
+        y: 330
       },
       adder:{
         x: 850,
-        y: 200
+        y: 230
       },
       address: {
         x: 15,
@@ -47,7 +51,7 @@ class Computer {
     let selectorSignal = new Signal();
     this.bus = createArrayOfSignals(bits);
     this.clockSignals = createArrayOfSignals(2);
-    this.controlSignals = createArrayOfSignals(12);
+    this.controlSignals = createArrayOfSignals(15);
     this.reset = new Signal();
     this.clock = new Clock(this.clockSignals,
       this.x + this.locations.clock.x,
@@ -57,22 +61,31 @@ class Computer {
       this.x + this.locations.bus.x,
       this.y + this.locations.bus.y
     );
-    this.registerA = new Register(this.bus,
-      [this.controlSignals[0], this.controlSignals[1], this.reset],
+    this.programCounter = new ProgramCounter(this.bus,
+      this.controlSignals[12],
+      this.controlSignals[13],
+      this.controlSignals[14],
       this.clockSignals[0],
+      this.reset,
+      this.x + this.locations.programCounter.x,
+      this.y + this.locations.programCounter.y
+    );
+    this.registerA = new Register(this.bus,
+      this.controlSignals[0], this.controlSignals[1],
+      this.clockSignals[0], this.reset,
       this.x + this.locations.registerA.x,
       this.y + this.locations.registerA.y
     );
     this.registerB = new Register(this.bus,
-      [this.controlSignals[2], this.controlSignals[3], this.reset],
-      this.clockSignals[0],
+      this.controlSignals[2], this.controlSignals[3],
+      this.clockSignals[0], this.reset,
       this.x + this.locations.registerB.x,
       this.y + this.locations.registerB.y
     );
-    this.adder = new Adder8Bit(this.registerA.outputs.map(function(d) { return d[0];}),
-      this.registerB.outputs.map(function(d) { return d[0];}),
-      this.controlSignals[4],
-      [this.controlSignals[5]],
+    this.adder = new Adder8Bit(this.registerA.outputs.map(function(d) { return d;}),
+      this.registerB.outputs.map(function(d) { return d;}),
+      this.controlSignals[4], // subtraction
+      this.controlSignals[5], // enable
       this.bus,
       this.x + this.locations.adder.x,
       this.y + this.locations.adder.y
@@ -90,7 +103,7 @@ class Computer {
       address,
       [this.controlSignals[10], this.controlSignals[11], this.reset],
       selectorSignal,
-      memoryTriger,      
+      memoryTriger,
       this.x + this.locations.memory.x,
       this.y + this.locations.memory.y
     );
@@ -119,6 +132,7 @@ class Computer {
     this.addressRegister.clicked();
     this.memoryInput.clicked();
     this.memory.clicked();
+    this.programCounter.clicked();
   }
   mousePressed() {
     this.clock.mousePressed();
@@ -128,6 +142,7 @@ class Computer {
     this.addressRegister.mousePressed();
     this.memoryInput.mousePressed();
     this.memory.mousePressed();
+    this.programCounter.mousePressed();
   }
   mouseReleased() {
     this.clock.mouseReleased();
@@ -137,9 +152,11 @@ class Computer {
     this.addressRegister.mouseReleased();
     this.memoryInput.mouseReleased();
     this.memory.mouseReleased();
+    this.programCounter.mouseReleased();
   }
   update() {
     this.clock.update();
+    this.programCounter.update();
     this.registerA.update();
     this.registerB.update();
     this.adder.update();
@@ -150,6 +167,7 @@ class Computer {
   }
   render() {
     this.clock.render();
+    this.programCounter.render();
     this.busDisplay.render();
     this.registerA.render();
     this.registerB.render();

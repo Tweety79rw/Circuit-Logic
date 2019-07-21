@@ -1,19 +1,13 @@
-class AdderBit {
+class AdderBit extends CircuitLogic {
   constructor(inputs, carry, outputs) {
-    let xor1Out = [new Signal()];
-    let and1Out = [new Signal()];
-    let and2Out = [new Signal()];
-    this.xor1 = new XorGate(inputs, xor1Out);
-    this.xor2 = new XorGate([carry, xor1Out[0]], [outputs[0]]);
-    this.and1 = new AndGate([carry, xor1Out[0]], and1Out);
-    this.and2 = new AndGate(inputs, and2Out);
-    this.or = new OrGate([and1Out[0], and2Out[0]], [outputs[1]]);
-  }
-  update() {
-    this.xor1.update();
-    this.xor2.update();
-    this.and1.update();
-    this.and2.update();
-    this.or.update();
+    super();
+    let xor1Out = new Signal();
+    let and1Out = new Signal();
+    let and2Out = new Signal();
+    super.addGate(new XorGate(inputs, [xor1Out]));
+    super.addGate(new XorGate([carry, xor1Out], [outputs[0]]));
+    super.addGate(new AndGate([carry, xor1Out], [and1Out]));
+    super.addGate(new AndGate(inputs, [and2Out]));
+    super.addGate(new OrGate([and1Out, and2Out], [outputs[1]]));
   }
 }

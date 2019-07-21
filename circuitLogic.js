@@ -1,6 +1,13 @@
 class CircuitLogic {
-  constructor(inputs, outputs) {
-    this.inputs = inputs;
-    this.outputs = outputs;
+  constructor() {
+    this.gates = [];
+  }
+  addGate(gate) {
+    this.gates.push(gate);
+  }
+  update() {
+    for(let gate of this.gates) {
+      gate.update();
+    }
   }
 }

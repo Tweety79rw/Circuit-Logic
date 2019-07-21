@@ -27,7 +27,7 @@ class Memory extends Module {
       for(let j = 0; j < 8; j++) {
         let bitOut = new Signal();
         this.tristateByteAnds.push(new TriState([bitOut, outs[i]], [this.outputs[j]]));
-        byte.push(new RegisterBit([inputs[j], loadOut, clock], [bitOut],  new Signal()));
+        byte.push(new RegisterBit([inputs[j], loadOut], [bitOut], clock,  new Signal()));
       }
       this.bytes.push(byte);
     }

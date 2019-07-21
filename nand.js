@@ -1,11 +1,8 @@
 class NandGate extends CircuitLogic {
   constructor(inputs, outputs) {
-    super(null, [new Signal(false)]);
-    this.and = new AndGate(inputs, this.outputs);
-    this.inverter = new Inverter(this.outputs, outputs);
-  }
-  update() {
-    this.and.update();
-    this.inverter.update();
+    super();
+    let andout = [new Signal()];
+    super.addGate(new AndGate(inputs, andout));
+    super.addGate(new Inverter(andout, outputs));
   }
 }

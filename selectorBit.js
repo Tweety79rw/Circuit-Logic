@@ -1,15 +1,10 @@
-class SelectorBit {
+class SelectorBit extends CircuitLogic {
   constructor(aInput, bInput, select, invertSelect, out) {
-    this.gates = [];
+    super();
     let and1Out = new Signal();
     let and2Out = new Signal();
-    this.gates.push(new AndGate([aInput, select], [and1Out]));
-    this.gates.push(new AndGate([bInput, invertSelect], [and2Out]));
-    this.gates.push(new OrGate([and1Out, and2Out], [out]));
-  }
-  update() {
-    for(let gate of this.gates) {
-      gate.update();
-    }
+    super.addGate(new AndGate([aInput, select], [and1Out]));
+    super.addGate(new AndGate([bInput, invertSelect], [and2Out]));
+    super.addGate(new OrGate([and1Out, and2Out], [out]));
   }
 }

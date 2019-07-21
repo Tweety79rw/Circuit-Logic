@@ -1,17 +1,19 @@
 class DFlipFlop extends CircuitLogic {
-  constructor(inputs, outputs, reset) {
-    super(inputs, [new Signal(false)]);
-    this.dLatch = new DLatch([this.inputs[0], this.outputs[0]],outputs, reset);
+  constructor(inputs, outputs, clock, reset) {
+    super();
+    this.clock = clock;
+    this.outputs = new Signal();
+    super.addGate(new DLatch([inputs[0], this.outputs], outputs, reset));
     this.risingEdge = false;
   }
   update() {
-    if(this.inputs[1].state && !this.risingEdge) {
+    if(this.clock.state && !this.risingEdge) {
       this.risingEdge = true;
-      this.outputs[0].state = true;
-    } else if(!this.inputs[1].state && this.risingEdge) {
+      this.outputs.state = true;
+    } else if(!this.clock.state && this.risingEdge) {
       this.risingEdge = false;
     }
-    this.dLatch.update();
-    this.outputs[0].state = false;
+    super.update();
+    this.outputs.state = false;
   }
 }
