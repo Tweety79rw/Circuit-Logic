@@ -11,7 +11,6 @@ class Clock {
     let monoStableInverterOut = new Signal();
     this.led = new Led(this.x + 120, this.y + 10, 20, out[0], 'Clock', BOTTOM);
     this.run = new Led(this.x + 60, this.y + 10, 20, this.runSignal, 'Run', BOTTOM);
-    this.runSignal.state = false;
     this.step = new Led(this.x + 5, this.y + 10, 20, this.stepSignal, 'Step', BOTTOM);
     this.or = new OrGate([monoStableOut, astableOut],[out[0]]);
     this.addAstable = new AndGate([fiverOut, this.runSignal], [astableOut]);

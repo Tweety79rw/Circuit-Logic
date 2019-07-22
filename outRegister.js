@@ -30,11 +30,14 @@ class OutRegister extends Module {
     //super.addGate(new FiveCubedTimer(this.pins));
     let oneBit = new Signal();
     let twoBit = new Signal();
+    let twosComp = new Signal();
     super.addGate(new JKFlipFlop([new Signal(true),new Signal(true)], this.fiverOut, new Signal(), [oneBit, new Signal()]));
     super.addGate(new JKFlipFlop([new Signal(true),new Signal(true)], oneBit, new Signal(), [twoBit, new Signal()]));
-    // super.addRender(new Led(x + 40, y + 100, 20, oneBit));
+    let twosCompLed = new Led(x, y + 50, 20, twosComp, 'Twos Complement', RIGHT);
+    super.addRender(twosCompLed);
+    super.addClick(twosCompLed);
     // super.addRender(new Led(x + 10, y + 100, 20, twoBit));
-    super.addGate(new EEPROM([twoBit, oneBit, ...this.outputs], segmentOuts, 'sevenSegment.txt'));
+    super.addGate(new EEPROM([twosComp, twoBit, oneBit, ...this.outputs], segmentOuts, 'sevenSegment.txt'));
     let decodedBits = createArrayOfSignals(4);
     super.addGate(new Decoder([twoBit, oneBit], decodedBits));
     super.addRender(new SevenSegment(x + 160, y + 15, segmentOuts, decodedBits[0]));

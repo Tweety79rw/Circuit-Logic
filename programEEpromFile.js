@@ -4,6 +4,11 @@ let rom = Array(2048).fill('11111111');
 function setEeprom(address, value) {
   rom[address] = value;
 }
+function toTwoComp(val) {
+  if(val >= 0)
+    return val;
+  return ~(((-val) - 1) | ~((1 << 8) - 1));
+}
 for(let value = 0; value < 256; value++) {
   setEeprom(value, (digits[value % 10]).toString(2).padStart(8,'0'));
 }
@@ -15,6 +20,22 @@ for(let value = 0; value < 256; value++) {
 }
 for(let value = 0; value < 256; value++) {
   setEeprom(value + 768, (0).toString(2).padStart(8, '0'));
+}
+for(let value = -128; value < 128; value++) {
+  setEeprom(toTwoComp(value) + 1024, (digits[Math.abs(value) % 10]).toString(2).padStart(8,'0'));
+}
+for(let value = -128; value < 128; value++) {
+  setEeprom(toTwoComp(value) + 1280, (digits[Math.floor(Math.abs(value) / 10) % 10]).toString(2).padStart(8, '0'));
+}
+for(let value = -128; value < 128; value++) {
+  setEeprom(toTwoComp(value) + 1536, (digits[Math.floor(Math.abs(value) / 100) % 10]).toString(2).padStart(8, '0'));
+}
+for(let value = -128; value < 128; value++) {
+  if((value) < 0) {
+    setEeprom(toTwoComp(value) + 1792, (1).toString(2).padStart(8, '0'));
+  } else {
+    setEeprom(toTwoComp(value) + 1792, (0).toString(2).padStart(8, '0'));
+  }
 }
 
 fs.writeFile('sevenSegment.txt', rom.join('\n'), function(err) {

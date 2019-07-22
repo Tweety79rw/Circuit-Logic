@@ -13,7 +13,6 @@ class ProgramCounter extends Module {
     super.addRender(oEnableLed);
     super.addClick(oEnableLed);
     let cEnableLed = new Led(x + 200, y + 25, 20, cEnable, 'Count Enable', RIGHT);
-    cEnable.state = true;
     super.addRender(cEnableLed);
     super.addClick(cEnableLed);
     let resetLed = new Led(x + 200, y + 60, 20, reset, 'Reset', RIGHT);
