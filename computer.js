@@ -22,6 +22,10 @@ class Computer {
         x: 850,
         y: 330
       },
+      outRegister: {
+        x: 850,
+        y: 450
+      },
       adder:{
         x: 850,
         y: 230
@@ -51,7 +55,7 @@ class Computer {
     let selectorSignal = new Signal();
     this.bus = createArrayOfSignals(bits);
     this.clockSignals = createArrayOfSignals(2);
-    this.controlSignals = createArrayOfSignals(15);
+    this.controlSignals = createArrayOfSignals(16);
     this.reset = new Signal();
     this.clock = new Clock(this.clockSignals,
       this.x + this.locations.clock.x,
@@ -121,6 +125,13 @@ class Computer {
       this.x + this.locations.instruction.x,
       this.y + this.locations.instruction.y
     );
+    this.outRegister = new OutRegister(this.bus,
+      this.controlSignals[15],
+      this.reset,
+      this.clockSignals[0],
+      this.x + this.locations.outRegister.x,
+      this.y + this.locations.outRegister.y
+    );
   }
   clicked() {
     this.registerA.clicked();
@@ -133,6 +144,7 @@ class Computer {
     this.memoryInput.clicked();
     this.memory.clicked();
     this.programCounter.clicked();
+    this.outRegister.clicked();
   }
   mousePressed() {
     this.clock.mousePressed();
@@ -143,6 +155,7 @@ class Computer {
     this.memoryInput.mousePressed();
     this.memory.mousePressed();
     this.programCounter.mousePressed();
+    this.outRegister.mousePressed();
   }
   mouseReleased() {
     this.clock.mouseReleased();
@@ -153,6 +166,7 @@ class Computer {
     this.memoryInput.mouseReleased();
     this.memory.mouseReleased();
     this.programCounter.mouseReleased();
+    this.outRegister.mouseReleased();
   }
   update() {
     this.clock.update();
@@ -164,6 +178,7 @@ class Computer {
     this.memoryInput.update();
     this.memory.update();
     this.instruction.update();
+    this.outRegister.update();
   }
   render() {
     this.clock.render();
@@ -176,5 +191,6 @@ class Computer {
     this.memoryInput.render();
     this.memory.render();
     this.instruction.render();
+    this.outRegister.render();
   }
 }
