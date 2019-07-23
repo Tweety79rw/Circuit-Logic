@@ -9,7 +9,7 @@ class Led {
     this.signal = signal;
     this.label = label;
     if(side != null) {
-      let sideX = (side === 1? 15: side === 0? -15 - label.length: side === 2 || side === 3? -label.length/2*7: 0);
+      let sideX = (side === 1? 15: side === 0? -15 - label.length: side === 2 || side === 3? -Math.ceil(label.length/2)*7: 0);
       let sideY = (side === 3? 25: side === 2? -25: side === 1 || side === 0? 3: 0);
       this.side = {
         x: sideX,
