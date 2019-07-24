@@ -28,7 +28,7 @@ class Clock extends Module {
     super.addGate(new OrGate([monoStableOut, astableOut],[clockOrStepOut]));
     super.addGate(new Inverter([halt],[hltInvertOut]));
     super.addGate(new AndGate([hltInvertOut, clockOrStepOut], [out[0]]));
-    let slider = createSlider(0.01, 0.5, 0.1, 0.001);
+    let slider = createSlider(0.01, 3.5, 0.1, 0.001);
     slider.parent(createDiv('Clock Speed'));
     this.adder = 0.1;
     let _this = this;

@@ -204,17 +204,17 @@ class Computer {
   }
   update() {
     this.clock.update();
+    this.controlTimer.update();
     this.programCounter.update();
-    this.registerA.update();
-    this.registerB.update();
-    this.adder.update();
     this.addressRegister.update();
     this.memoryInput.update();
     this.memory.update();
+    this.adder.update();
+    this.registerA.update();
+    this.registerB.update();
+    this.flagsReg.update();
     this.instruction.update();
     this.outRegister.update();
-    this.controlTimer.update();
-    this.flagsReg.update();
   }
   render() {
     this.clock.render();

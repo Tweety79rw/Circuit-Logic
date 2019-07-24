@@ -1,4 +1,4 @@
-const signalLabels = ['HLT', 'MI', 'RI', 'RO', 'IO', 'II', 'AI', 'AO', 'EO', 'SU', 'BI', 'OI', 'CE', 'CO', 'J', 'JC'];
+const signalLabels = ['HLT', 'MI', 'RI', 'RO', 'IO', 'II', 'AI', 'AO', 'EO', 'SU', 'BI', 'OI', 'CE', 'CO', 'J', 'FI'];
 class ControlSignal extends Module {
   constructor(signals, x, y) {
     super(x, y, 'Control Signals');

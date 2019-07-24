@@ -43,10 +43,10 @@ const TEMPLATE = [
   [MI|CO, RO|II|CE,   HLT,     0,           0,  0, 0, 0],  // 1111 - HLT
 ];
 let withFlags = [
-  TEMPLATE,
-  TEMPLATE,
-  TEMPLATE,
-  TEMPLATE
+  JSON.parse(JSON.stringify(TEMPLATE)), // important to make copies of template and not just put template into the array 4 times
+  JSON.parse(JSON.stringify(TEMPLATE)),
+  JSON.parse(JSON.stringify(TEMPLATE)),
+  JSON.parse(JSON.stringify(TEMPLATE))
 ];
 withFlags[FLAGS_Z0C1][JC][2] = IO|J;
 withFlags[FLAGS_Z1C0][JZ][2] = IO|J;

@@ -1,6 +1,6 @@
 class ControlTimer extends Module {
   constructor(clock, control, signals, flags, reset, controlSignals, x, y) {
-    super(x, y, 'Control Timer');
+    super(x, y, 'Micro Instuction Timer');
     let flipOutQArr = [];
     let flipOutQIArr = [];
     let clockInvert = new Signal();
@@ -20,10 +20,10 @@ class ControlTimer extends Module {
     super.addGate(new OrGate([decoderInvertOut[5], reset], [resetOut]));
     super.addGate(new Inverter([clock], [clockInvert]));
     super.addGate(new DecoderThreeToEight(flipOutQIArr, decoderOut));
-    for(let i = 0; i < decoderOut.length - 3; i++) {
-      super.addRender(new Led(i * 25 + x + 100, y + 25, 20, decoderOut[i], ('T' + i).toString(), BOTTOM))
+    for(let i = 0; i < decoderInvertOut.length - 3; i++) {
+      super.addRender(new Led(i * 25 + x + 100, y + 25, 20, decoderInvertOut[i], ('T' + i).toString(), BOTTOM))
     }
-    super.addGate(new EEPROM([...flags ,new Signal(), ...control, ...flipOutQIArr.reverse()], signals.slice(0, 8), 'control.txt'));
+    super.addGate(new EEPROM([...flags.reverse() ,new Signal(), ...control, ...flipOutQIArr.reverse()], signals.slice(0, 8), 'control.txt'));
     super.addGate(new EEPROM([...flags ,new Signal(true), ...control, ...flipOutQIArr], signals.slice(8), 'control.txt'));
   }
 }

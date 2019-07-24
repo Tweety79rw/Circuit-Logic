@@ -22,7 +22,7 @@ class Adder8Bit extends Module {
       carry = bitCarry;
     }
     this.flags = [carry, new Signal()];
-    super.addGate(new NorGate(internal, [this.flags[0]]));
+    super.addGate(new NorGate(internal, [this.flags[1]]));
 
     for(let toAdd of xors) {
       super.addGate(toAdd);
