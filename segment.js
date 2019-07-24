@@ -1,4 +1,4 @@
-const FADE_MAX = 10;
+const FADE_MAX = 15;
 class Segment {
   constructor(x, y, w, r, signal, ground) {
     this.x = x;
