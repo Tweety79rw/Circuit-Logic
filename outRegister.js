@@ -11,9 +11,9 @@ class OutRegister extends Module {
     super.addRender(loadLed);
     // super.addRender(enabledLed);
     super.addRender(resetLed);
-    super.addClick(loadLed);
+    //super.addClick(loadLed);
     // super.addClick(enabledLed);
-    super.addPressRelease(resetLed);
+    //super.addPressRelease(resetLed);
     for(let i = 0; i < bits.length; i++) {
       // super.addGate(new TriState([this.outputs[i], enable], [bus[i]]));
       super.addGate(new RegisterBit(bits[i], [this.outputs[i]], clock, reset));

@@ -47,7 +47,7 @@ function setup() {
     <tr>
       <td>LDI</td>
       <td>0101</td>
-      <td>Loads the value imeditaly into register A eg.(0101 0011) stores the value 3 into register A</td>
+      <td>Loads the value imeditaly into register A up to a value of 15 eg.(0101 0011) stores the value 3 into register A</td>
     </tr>
     <tr>
       <td>JMP</td>

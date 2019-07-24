@@ -4,10 +4,10 @@ class Adder8Bit extends Module {
     let internal = createArrayOfSignals(aInputs.length);
     let subLed = new Led(x, y, 20, carry, 'Subtract', RIGHT);
     super.addRender(subLed);
-    super.addClick(subLed);
+    //super.addClick(subLed);
     let enabledLed = new Led(x, y + 70, 20, enable, 'Enable', RIGHT);
     super.addRender(enabledLed);
-    super.addClick(enabledLed);
+    //super.addClick(enabledLed);
     for(let i = 0; i < aInputs.length; i++) {
       super.addRender(new Led(i * 25 + x, y + 25, 20, internal[i], (Math.pow(2,(7 - i))).toString(), BOTTOM));
       super.addGate(new TriState([internal[i], enable], [bus[i]]));

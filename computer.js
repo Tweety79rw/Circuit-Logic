@@ -1,7 +1,22 @@
-class Computer {
+const machineCode = {
+  'NOP': '0000',
+  'LDA': '0001',
+  'ADD': '0010',
+  'SUB': '0011',
+  'STA': '0100',
+  'LDI': '0101',
+  'JMP': '0110',
+  'JC': '0111',
+  'JZ': '1000',
+  'OUT': '1110',
+  'HLT': '1111'
+};
+
+class Computer  extends Component {
   constructor(x, y, bits) {
+    super(x, y);
     bits = bits || 8;
-    this.locations = {
+    let locations = {
       clock:{
         x: 15,
         y: 15
@@ -39,7 +54,7 @@ class Computer {
         y: 100
       },
       memory: {
-        x: 15,
+        x: 50,
         y: 200
       },
       memoryInput: {
@@ -49,187 +64,204 @@ class Computer {
       instruction:{
         x: 15,
         y: 450
-      }, controlTimer: {
+      },
+      controlTimer: {
         x: 15,
         y: 550
-      }, flags: {
+      },
+      flags: {
         x: 1100,
         y: 200
       }
     };
-    this.x = x;
-    this.y = y;
+
     let address = createArrayOfSignals(4);
     let memoryIn = createArrayOfSignals(8);
     let memoryTriger = new Signal();
     let selectorSignal = new Signal();
-    this.bus = createArrayOfSignals(bits);
-    this.clockSignals = createArrayOfSignals(2);
-    this.flags = createArrayOfSignals(2);
-    this.controlSignals = createArrayOfSignals(16);
-    this.reset = new Signal();
-    this.clock = new Clock(this.clockSignals,
-      this.controlSignals[0],
-      this.x + this.locations.clock.x,
-      this.y + this.locations.clock.x
+    let bus = createArrayOfSignals(bits);
+    let clockSignals = createArrayOfSignals(2);
+    let flags = createArrayOfSignals(2);
+    let controlSignals = createArrayOfSignals(16);
+    let reset = new Signal();
+    let clock = new Clock(clockSignals,
+      controlSignals[0],
+      x + locations.clock.x,
+      y + locations.clock.x
     );
-    this.busDisplay = new Bus(this.bus,
-      this.x + this.locations.bus.x,
-      this.y + this.locations.bus.y
+    let busDisplay = new Bus(bus,
+      x + locations.bus.x,
+      y + locations.bus.y
     );
-    this.programCounter = new ProgramCounter(this.bus,
-      this.controlSignals[14],
-      this.controlSignals[13],
-      this.controlSignals[12],
-      this.clockSignals[0],
-      this.reset,
-      this.x + this.locations.programCounter.x,
-      this.y + this.locations.programCounter.y
+    let programCounter = new ProgramCounter(bus,
+      controlSignals[14],
+      controlSignals[13],
+      controlSignals[12],
+      clockSignals[0],
+      reset,
+      x + locations.programCounter.x,
+      y + locations.programCounter.y
     );
-    this.registerA = new Register(this.bus,
-      this.controlSignals[6], this.controlSignals[7],
-      this.clockSignals[0], this.reset,
-      this.x + this.locations.registerA.x,
-      this.y + this.locations.registerA.y
+    let registerA = new Register(bus,
+      controlSignals[6], controlSignals[7],
+      clockSignals[0], reset,
+      x + locations.registerA.x,
+      y + locations.registerA.y
     );
-    this.registerB = new Register(this.bus,
-      this.controlSignals[10], new Signal(),
-      this.clockSignals[0], this.reset,
-      this.x + this.locations.registerB.x,
-      this.y + this.locations.registerB.y
+    let registerB = new Register(bus,
+      controlSignals[10], new Signal(),
+      clockSignals[0], reset,
+      x + locations.registerB.x,
+      y + locations.registerB.y
     );
-    this.adder = new Adder8Bit(this.registerA.outputs.map(function(d) { return d;}),
-      this.registerB.outputs.map(function(d) { return d;}),
-      this.controlSignals[9], // subtraction
-      this.controlSignals[8], // enable
-      this.bus,
-      this.x + this.locations.adder.x,
-      this.y + this.locations.adder.y
+    let adder = new Adder8Bit(registerA.outputs.map(function(d) { return d;}),
+      registerB.outputs.map(function(d) { return d;}),
+      controlSignals[9], // subtraction
+      controlSignals[8], // enable
+      bus,
+      x + locations.adder.x,
+      y + locations.adder.y
     );
-    this.flagsReg = new FlagsReg(this.adder.flags,
-      this.flags,
-      this.controlSignals[15],
-      this.clockSignals[0],
-      this.reset,
-      this.x + this.locations.flags.x,
-      this.y + this.locations.flags.y
+    let flagsReg = new FlagsReg(adder.flags,
+      flags,
+      controlSignals[15],
+      clockSignals[0],
+      reset,
+      x + locations.flags.x,
+      y + locations.flags.y
     );
-    this.addressRegister = new AddressRegister(this.bus,
+    let addressRegister = new AddressRegister(bus,
       address,
-      this.controlSignals[1],
-      this.reset,
-      this.clockSignals[0],
+      controlSignals[1],
+      reset,
+      clockSignals[0],
       selectorSignal,
-      this.x + this.locations.address.x,
-      this.y + this.locations.address.y
+      x + locations.address.x,
+      y + locations.address.y
     );
-    this.memory = new Memory(memoryIn,
-      this.bus,
+    let memory = new Memory(memoryIn,
+      bus,
       address,
-      [this.controlSignals[2], this.controlSignals[3], this.reset],
+      [controlSignals[2], controlSignals[3], reset],
       selectorSignal,
       memoryTriger,
-      this.x + this.locations.memory.x,
-      this.y + this.locations.memory.y
+      x + locations.memory.x,
+      y + locations.memory.y
     );
-    this.memoryInput = new MemoryInput(this.bus,
+    let memoryInput = new MemoryInput(bus,
       memoryIn,
       selectorSignal,
       memoryTriger,
-      this.clockSignals[0],
-      this.x + this.locations.memoryInput.x,
-      this.y + this.locations.memoryInput.y
+      reset,
+      clockSignals[0],
+      x + locations.memoryInput.x,
+      y + locations.memoryInput.y
     );
-    this.instruction = new InstructionRegister(this.bus,
-      [this.controlSignals[5], this.controlSignals[4], this.reset],
-      this.clockSignals[0],
-      this.x + this.locations.instruction.x,
-      this.y + this.locations.instruction.y
+    let instruction = new InstructionRegister(bus,
+      [controlSignals[5], controlSignals[4], reset],
+      clockSignals[0],
+      x + locations.instruction.x,
+      y + locations.instruction.y
     );
-    this.outRegister = new OutRegister(this.bus,
-      this.controlSignals[11],
-      this.reset,
-      this.clockSignals[0],
-      this.x + this.locations.outRegister.x,
-      this.y + this.locations.outRegister.y
+    let outRegister = new OutRegister(bus,
+      controlSignals[11],
+      reset,
+      clockSignals[0],
+      x + locations.outRegister.x,
+      y + locations.outRegister.y
     );
-    this.controlSignalsDisplay = new ControlSignal(this.controlSignals,
-      this.x + this.locations.controlSignalsDisplay.x,
-      this.y + this.locations.controlSignalsDisplay.y
+    let controlSignalsDisplay = new ControlSignal(controlSignals,
+      x + locations.controlSignalsDisplay.x,
+      y + locations.controlSignalsDisplay.y
     );
-    this.controlTimer = new ControlTimer(this.clockSignals[0],
-      this.instruction.outputs.slice(0, 4),
-      this.controlSignals,
-      this.flags,
-      this.reset,
-      this.controlSignals,
-      this.x + this.locations.controlTimer.x,
-      this.y + this.locations.controlTimer.y
+    let controlTimer = new ControlTimer(clockSignals[0],
+      instruction.outputs.slice(0, 4),
+      controlSignals,
+      flags,
+      reset,
+      controlSignals,
+      x + locations.controlTimer.x,
+      y + locations.controlTimer.y
     );
-  }
-  clicked() {
-    this.registerA.clicked();
-    this.registerB.clicked();
-    this.adder.clicked();
-    this.busDisplay.clicked();
-    this.clock.clicked();
-    this.instruction.clicked();
-    this.addressRegister.clicked();
-    this.memoryInput.clicked();
-    this.memory.clicked();
-    this.programCounter.clicked();
-    this.outRegister.clicked();
-  }
-  mousePressed() {
-    this.clock.mousePressed();
-    this.registerA.mousePressed();
-    this.registerB.mousePressed();
-    this.instruction.mousePressed();
-    this.addressRegister.mousePressed();
-    this.memoryInput.mousePressed();
-    this.memory.mousePressed();
-    this.programCounter.mousePressed();
-    this.outRegister.mousePressed();
-  }
-  mouseReleased() {
-    this.clock.mouseReleased();
-    this.registerA.mouseReleased();
-    this.registerB.mouseReleased();
-    this.instruction.mouseReleased();
-    this.addressRegister.mouseReleased();
-    this.memoryInput.mouseReleased();
-    this.memory.mouseReleased();
-    this.programCounter.mouseReleased();
-    this.outRegister.mouseReleased();
-  }
-  update() {
-    this.clock.update();
-    this.controlTimer.update();
-    this.programCounter.update();
-    this.addressRegister.update();
-    this.memoryInput.update();
-    this.memory.update();
-    this.adder.update();
-    this.registerA.update();
-    this.registerB.update();
-    this.flagsReg.update();
-    this.instruction.update();
-    this.outRegister.update();
-  }
-  render() {
-    this.clock.render();
-    this.programCounter.render();
-    this.busDisplay.render();
-    this.registerA.render();
-    this.registerB.render();
-    this.adder.render();
-    this.addressRegister.render();
-    this.memoryInput.render();
-    this.memory.render();
-    this.instruction.render();
-    this.outRegister.render();
-    this.controlSignalsDisplay.render();
-    this.controlTimer.render();
-    this.flagsReg.render();
+    super.addComponent(clock);
+    super.addComponent(controlTimer);
+    super.addComponent(programCounter);
+    super.addComponent(addressRegister);
+    super.addComponent(memoryInput);
+    super.addComponent(memory);
+    super.addComponent(adder);
+    super.addComponent(registerA);
+    super.addComponent(registerB);
+    super.addComponent(flagsReg);
+    super.addComponent(instruction);
+    super.addComponent(outRegister);
+    super.addComponent(busDisplay);
+    super.addComponent(controlSignalsDisplay);
+    let addressInputBits = addressRegister.programAddressBits;
+    let memoryInputBits = memoryInput.selectorBitSignals;
+    let memoryTriggerInput = memoryInput.trigger;
+    let _this = this;
+    function setStates(signals, n) {
+      for(let i = 0; i < n.length; i++) {
+        signals[i].state = n[i] === '1'?true:false;
+      }
+    }
+    function setAddress(n) {
+      setStates(addressInputBits, n);
+    }
+    function setMemory(n) {
+      setStates(memoryInputBits, n);
+    }
+    function runCode(addressStr, memoryStr) {
+      setAddress(addressStr);
+      setMemory(memoryStr);
+      memoryTriggerInput.state = true;
+      _this.update();
+      memoryTriggerInput.state = false;
+      _this.update();
+    }
+    let loadButton = createButton('load sample program');
+    loadButton.mouseClicked(function() {
+      selectorSignal.state = true;
+      _this.update();
+      runCode('0000','11100000');
+      runCode('0001','00101111');
+      runCode('0010','01110100');
+      runCode('0011','01100000');
+      runCode('0100','00111111');
+      runCode('0101','11100000');
+      runCode('0110','10000000');
+      runCode('0111','01100100');
+      runCode('1111','00110010');
+      selectorSignal.state = false;
+      _this.update();
+    });
+    let textArea = createElement('textArea','');
+    let compile = createButton('Compile');
+    compile.mouseClicked(function() {
+      let lines = textArea.value().split('\n').map(function(d) { return d.split(' ');});
+      let errorLines = [];
+      for(let i = 0; i < lines.length; i++) {
+        if(!machineCode.hasOwnProperty(lines[i][0])) {
+          errorLines.push(i + 1);
+        }
+      }
+      if(errorLines.length == 0) {
+        selectorSignal.state = true;
+        _this.update();
+        for(let i = 0; i < lines.length; i++) {
+          if(lines[i].length >= 2) {
+            runCode((i).toString(2).padStart(4, '0'), machineCode[lines[i][0]] + parseInt(lines[i][1]).toString(2).padStart(4, '0'));
+          } else if(lines[i].length == 1) {
+            runCode((i).toString(2).padStart(4, '0'), machineCode[lines[i][0]] + (0).toString(2).padStart(4, '0'));
+          }
+        }
+        selectorSignal.state = false;
+        _this.update();
+      } else {
+        console.log('errors on lines', errorLines);
+      }
+
+    });
   }
 }

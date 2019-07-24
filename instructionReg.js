@@ -7,13 +7,13 @@ class InstructionRegister extends Module {
     });
     let loadLed = new Led(x, y, 20, load[0], 'Load', RIGHT);
     super.addRender(loadLed);
-    super.addClick(loadLed);
+    //super.addClick(loadLed);
     let enabledLed = new Led(x, y + 70, 20, load[1], 'Enable', RIGHT);
     super.addRender(enabledLed);
-    super.addClick(enabledLed);
+    //super.addClick(enabledLed);
     let resetLed = new Led(x + 60, y, 20, load[2], 'reset', RIGHT);
     super.addRender(resetLed);
-    super.addPressRelease(resetLed);
+    //super.addPressRelease(resetLed);
     for(let i = 0; i < bits.length/2; i++) {
       super.addGate(new TriState([new Signal(), load[1]], [bus[i]]));
       super.addGate(new RegisterBit(bits[i], [this.outputs[i]], clock, load[2]));
