@@ -114,12 +114,15 @@ function mousePressed() {
 function mouseReleased() {
   computer.mouseReleased();
 }
-
+function update() {
+  computer.update();
+}
 /**
  * p5 draw loop gets called by p5.js
  */
 function draw() {
   background(0);
-  computer.update();
+
   computer.render();
 }
+setInterval(update, 0);
