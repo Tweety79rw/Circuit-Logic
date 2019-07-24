@@ -52,7 +52,7 @@ class OutRegister extends Module {
     // } else {
     //   this.voltage.state -= 3.05;
     // }
-    for(let i = 0; i < 4; i++) {
+    for(let i = 0; i < 3; i++) {
       this.fiverOut.state = !this.fiverOut.state;
       super.update();
     }
