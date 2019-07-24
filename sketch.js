@@ -125,4 +125,4 @@ function draw() {
 
   computer.render();
 }
-setInterval(update, 0);
+setInterval(update, 10);
